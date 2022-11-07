@@ -55,8 +55,16 @@ public class Graph {
         return edges;
     }
 
-
+    /**
+     * This method is used to read a graph with nodes and edges from a text file.
+     * @param pathname path of the text file which should be converted to a graph
+     * @return Graph(numberOfNodes,numberOfEdges, nodes, edges)
+     */
     public static Graph readGraphFromFile (String pathname){
+
+        /**
+         * Create Scanner and read file with english notation (point instead of comma for float)
+         */
 
         Scanner scan;
 
@@ -68,11 +76,26 @@ public class Graph {
 
         scan.useLocale(Locale.ENGLISH);
 
+        /**
+         * Reading the file line by line:
+         * "readingline" represents the current line of the text file as string
+         */
+
         String readingLine = new String(scan.nextLine());
+
+        /**
+         * The first lines of the text file, which don't contain the actual graph will be skipped
+         */
 
         while (readingLine.contains("#")||readingLine.isEmpty()){
             readingLine = scan.nextLine();
         }
+
+        /**
+         * The number of nodes and edges of the graph will be saved in an additional variable,
+         * which will also be used to determine the number of iterations to save single nodes and edges.
+         * The single nodes and edges will be saved with their parameters in separate ArrayLists.
+         */
 
         int numberOfNodes = Integer.parseInt(readingLine);
         readingLine = scan.nextLine();
@@ -108,6 +131,11 @@ public class Graph {
             Edge temporaryEdge = new Edge(readSrc,readTrg,readWight);
             edges.add(j,temporaryEdge);
         }
+
+        /**
+         * The collected data from the text file will be merged to a graph object
+         */
+
         return new Graph(numberOfNodes,numberOfEdges, nodes, edges);
     }
 }
