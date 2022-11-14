@@ -11,8 +11,8 @@ public class Test {
         //String pathname = "toy.fmi.txt";
         String pathname = "germany.fmi.txt";
 
-        Graph graph = Graph.readGraphFromFile(pathname);
-        Graph.printGraph(graph);
+        Graph graph = new Graph(pathname);
+
 
     }
 }
