@@ -7,8 +7,11 @@ import java.util.*;
 public class Graph {
 
     int[][] edge;
-    double [][] node;
+    double[][] node;
     int[] offset;
+
+    int numberOfEdges;
+    int numberOfNodes;
 
     public Graph(String pathname) {
 
@@ -37,7 +40,7 @@ public class Graph {
          * The first lines of the text file, which don't contain the actual graph will be skipped
          */
 
-        while (readingLine.contains("#")||readingLine.isEmpty()){
+        while (readingLine.contains("#") || readingLine.isEmpty()) {
             readingLine = scan.nextLine();
         }
 
@@ -47,16 +50,16 @@ public class Graph {
          * The single nodes and edges will be saved with their parameters in separate arrays.
          */
 
-        int numberOfNodes = Integer.parseInt(readingLine);
+        this.numberOfNodes = Integer.parseInt(readingLine);
         readingLine = scan.nextLine();
 
-        int numberOfEdges = Integer.parseInt(readingLine);
+        this.numberOfEdges = Integer.parseInt(readingLine);
 
-        this.node = new double [2][numberOfNodes];
+        this.node = new double[2][numberOfNodes];
         this.edge = new int[3][numberOfEdges];
-        this.offset = new int[numberOfNodes+1];
+        this.offset = new int[numberOfNodes + 1];
 
-        for (int i=0; i<numberOfNodes; i++){
+        for (int i = 0; i < numberOfNodes; i++) {
 
             int readId = scan.nextInt();
             scan.nextLong();
@@ -64,11 +67,11 @@ public class Graph {
             double readLongitude = scan.nextDouble();
             scan.nextInt();
 
-            node [0][readId] = readLatitude;
-            node [1] [readId] = readLongitude;
+            node[0][readId] = readLatitude;
+            node[1][readId] = readLongitude;
 
         }
-        for (int j=0; j<numberOfEdges; j++){
+        for (int j = 0; j < numberOfEdges; j++) {
 
             int readSrc = scan.nextInt();
             int readTrg = scan.nextInt();
@@ -76,24 +79,24 @@ public class Graph {
             scan.nextInt();
             scan.nextInt();
 
-            edge [0][j] = readSrc;
-            edge [1] [j] = readTrg;
-            edge [2][j] = readWeight;
+            edge[0][j] = readSrc;
+            edge[1][j] = readTrg;
+            edge[2][j] = readWeight;
 
         }
 
 
-        offset [0] = 0;
-        int current =0;
-        for (int k = 0; k<(numberOfEdges); k++){
-           if(edge [0][k] == current){
-               offset[current+1]++;
-           }else{
-               current ++;
-               offset[current+1]=offset[current];
-               k--;
+        offset[0] = 0;
+        int current = 0;
+        for (int k = 0; k < (numberOfEdges); k++) {
+            if (edge[0][k] == current) {
+                offset[current + 1]++;
+            } else {
+                current++;
+                offset[current + 1] = offset[current];
+                k--;
 
-           }
+            }
         }
     }
 
