@@ -36,3 +36,7 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Deutschlandgraph ###
+germany.fmi.txt
+germany.fmi.bz2
