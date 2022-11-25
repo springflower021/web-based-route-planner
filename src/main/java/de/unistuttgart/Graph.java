@@ -3,6 +3,8 @@ package de.unistuttgart;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.function.DoubleToIntFunction;
+import java.util.function.IntToDoubleFunction;
 
 public class Graph {
 
@@ -55,9 +57,18 @@ public class Graph {
 
         this.numberOfEdges = Integer.parseInt(readingLine);
 
+        double twoPercentOfNodes = numberOfNodes*0.2;
+        double twoPercentOfEdges = numberOfEdges*0.2;
+
+
         this.node = new double[2][numberOfNodes];
         this.edge = new int[3][numberOfEdges];
         this.offset = new int[numberOfNodes + 1];
+
+        System.out.println("Nodes einlesen:");
+
+        int nodesActuell =0;
+        System.out.print("0.0 %");
 
         for (int i = 0; i < numberOfNodes; i++) {
 
@@ -70,7 +81,16 @@ public class Graph {
             node[0][readId] = readLatitude;
             node[1][readId] = readLongitude;
 
+            if((i%100)==0){
+                nodesActuell = (i*100)/numberOfNodes;
+                System.out.print("\r"+nodesActuell+" %");
+            }
         }
+        System.out.println("\r100 % ");
+        System.out.println("Edges einlesen:");
+        System.out.print("0.0 %");
+        int edgesActuell =0;
+
         for (int j = 0; j < numberOfEdges; j++) {
 
             int readSrc = scan.nextInt();
@@ -83,8 +103,18 @@ public class Graph {
             edge[1][j] = readTrg;
             edge[2][j] = readWeight;
 
-        }
+            if((j%100)==0){
+                edgesActuell = (j*100)/numberOfEdges;
+                System.out.print("\r"+edgesActuell+" %");
+            }
 
+
+        }
+        System.out.println("\r100 % ");
+        System.out.println("Offset berechnen:");
+        System.out.print("0.0 %");
+
+        int offsetAktuell = 0;
 
         offset[0] = 0;
         int current = 0;
@@ -95,10 +125,17 @@ public class Graph {
                 current++;
                 offset[current + 1] = offset[current];
                 k--;
-
             }
+            if((k%100)==0){
+                offsetAktuell= (k*100)/numberOfEdges;
+                System.out.print("\r"+offsetAktuell+" %");
+            }
+
+        }
+        System.out.println("\r100 % ");
+
         }
     }
 
 
-}
+
