@@ -128,13 +128,6 @@ public class Graph {
 
     }
 
-    /**
-     *
-     * @param givenLatitude
-     * @param givenLongitude
-     * @param goal Is one for finding start node and zero for finding destination node
-     * @return
-     */
 
     public int findNearestNode(double givenLatitude, double givenLongitude) {
         int begin = 0;

@@ -7,12 +7,6 @@ import java.util.*;
 public class Test {
 
     public static void main(String[] args) {
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Please insert the name of the graph file");
-        String pathname=scanner.nextLine();
-        Graph graph = new Graph(pathname);
-
         int choice;
         double latitudeStart;
         double longitudeStart;
@@ -23,6 +17,14 @@ public class Test {
         Dijkstra.DijkstraReturn dijkstraReturn;
         long tsmp1;
         long tsmp2;
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Please insert the name of the graph file");
+        String pathname=scanner.nextLine();
+        tsmp1=System.currentTimeMillis();
+        Graph graph = new Graph(pathname);
+        tsmp2=System.currentTimeMillis();
+        System.out.println("Took: "+((tsmp2-tsmp1)) +"ms");
 
         do{
             System.out.println("///TEST MODULE///");
@@ -45,7 +47,7 @@ public class Test {
                     tsmp1 = System.currentTimeMillis();
                     dijkstraReturn = Dijkstra.dijkstraOneToAll(graph, startNode);
                     tsmp2 = System.currentTimeMillis();
-                    System.out.println("Took "+ ((tsmp2-tsmp1)/1000) +"s");
+                    System.out.println("Took "+ ((tsmp2-tsmp1)) +"ms");
 
                     break;
                 case 2:
@@ -56,7 +58,7 @@ public class Test {
                     tsmp1 = System.currentTimeMillis();
                     dijkstraReturn = Dijkstra.dijkstraOneToAll(graph, startNode);
                     tsmp2 = System.currentTimeMillis();
-                    System.out.println("Took "+ ((tsmp2-tsmp1)/1000) +"s");
+                    System.out.println("Took "+ ((tsmp2-tsmp1)) +"ms");
                     break;
                 case 3:
                     System.out.println("Please insert the latitude of the start position");
