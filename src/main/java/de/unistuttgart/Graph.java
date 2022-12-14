@@ -146,8 +146,15 @@ public class Graph {
         int thirdNode = Integer.MAX_VALUE;
         int iterationsWithNoNewValue = 0;
         do{
-            secondNode=sortedLatitude[nearestNodeLatitude+distanceToMid];
-            thirdNode=sortedLatitude[nearestNodeLatitude-distanceToMid];
+            int index1 =nearestNodeLatitude+distanceToMid;
+            int index2 =nearestNodeLatitude-distanceToMid;
+            if(index1>=numberOfNodes){
+                index1=numberOfNodes-1;
+            } else if (index2<0) {
+                index2=0;
+            }
+            secondNode=sortedLatitude[index1];
+            thirdNode=sortedLatitude[index2];
 
             if(distance(secondNode,givenLatitude,givenLongitude)< distance(firstNode,givenLatitude,givenLongitude)){
                 firstNode=secondNode;
