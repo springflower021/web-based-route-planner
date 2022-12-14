@@ -70,10 +70,10 @@ public class Graph {
         this.edge = new int[3][numberOfEdges];
         this.offset = new int[numberOfNodes + 1];
 
-        System.out.println("Nodes einlesen:");
+
 
         int nodesActuell = 0;
-        System.out.print("0.0 %");
+
 
         for (int i = 0; i < numberOfNodes; i++) {
 
@@ -86,14 +86,7 @@ public class Graph {
             nodeLat[readId] = readLatitude;
             nodeLong[readId] = readLongitude;
 
-            if ((i % 100) == 0) {
-                nodesActuell = (i * 100) / numberOfNodes;
-                System.out.print("\r" + nodesActuell + " %");
-            }
         }
-        System.out.println("\r100 % ");
-        System.out.println("Edges einlesen:");
-        System.out.print("0.0 %");
         int edgesActuell = 0;
 
         for (int j = 0; j < numberOfEdges; j++) {
@@ -108,16 +101,8 @@ public class Graph {
             edge[1][j] = readTrg;
             edge[2][j] = readWeight;
 
-            if ((j % 100) == 0) {
-                edgesActuell = (j * 100) / numberOfEdges;
-                System.out.print("\r" + edgesActuell + " %");
-            }
-
 
         }
-        System.out.println("\r100 % ");
-        Timestamp tstamp2 = new Timestamp(System.currentTimeMillis());
-        System.out.println("\nAusführungszeit " + pathname+ " eingelesen : "+ ((tstamp2.getTime()-tstamp1.getTime())/1000.0) + "s");
 
         int offsetAktuell = 0;
 

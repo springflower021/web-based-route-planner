@@ -15,7 +15,6 @@ public class Dijkstra {
         DijkstraReturn dijkstraReturn = new DijkstraReturn(new int[graph.numberOfNodes],new int[graph.numberOfNodes]);
         int status = 0;
 
-        System.out.println("Ausführung Dijkstra:");
 
         PriorityQueue<Integer> Q = new PriorityQueue<>(graph.numberOfNodes, (n1, n2) -> Integer.compare(dijkstraReturn.distance[n1],dijkstraReturn.distance[n2]));
         initialize(graph, startNode, dijkstraReturn.distance, dijkstraReturn.previous, Q);
@@ -23,10 +22,7 @@ public class Dijkstra {
         while (!Q.isEmpty()) {
 
             int u = Q.poll();
-            if(Q.size()%100 == 0) {
-                status = 100 - (Q.size() * 100) / graph.numberOfNodes;
-                System.out.print("\r" + status + " %");
-            }
+
             for (int i = graph.offset[u]; i < graph.offset[u + 1]; i++) {
                 final int v = graph.edge[1][i];
                 final int distanceUV = graph.edge[2][i];
@@ -39,18 +35,13 @@ public class Dijkstra {
         DijkstraReturn dijkstraReturn = new DijkstraReturn(new int[graph.numberOfNodes],new int[graph.numberOfNodes]);
         int status = 0;
 
-        System.out.println("Ausführung Dijkstra:");
-
         PriorityQueue<Integer> Q = new PriorityQueue<>(graph.numberOfNodes, (n1, n2) -> Integer.compare(dijkstraReturn.distance[n1],dijkstraReturn.distance[n2]));
         initialize(graph, startNode, dijkstraReturn.distance, dijkstraReturn.previous, Q);
 
         while (!Q.isEmpty()) {
 
             int u = Q.poll();
-            if(Q.size()%100 == 0) {
-                status = 100 - (Q.size() * 100) / graph.numberOfNodes;
-                System.out.print("\r" + status + " %");
-            }
+
             for (int i = graph.offset[u]; i < graph.offset[u + 1]; i++) {
                 final int v = graph.edge[1][i];
                 final int distanceUV = graph.edge[2][i];
@@ -85,7 +76,7 @@ public class Dijkstra {
 
     }
 
-    private static int[] createShortestWay(Graph graph, int destinationNode, DijkstraReturn dijkstraReturn) {
+    public static int[] createShortestWay(Graph graph, int destinationNode, DijkstraReturn dijkstraReturn) {
         int[] route = new int[graph.numberOfNodes];
         Arrays.fill(route, -1);
         route[graph.numberOfNodes - 1] = destinationNode;
