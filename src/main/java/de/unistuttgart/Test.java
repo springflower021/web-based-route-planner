@@ -22,7 +22,14 @@ public class Test {
         System.out.println("Please insert the name of the graph file");
         String pathname=scanner.nextLine();
         tsmp1=System.currentTimeMillis();
-        Graph graph = new Graph(pathname);
+        Graph graph;
+        try{
+            graph = new Graph(pathname);
+        }catch (Exception e){
+            e.printStackTrace();
+            return;
+        }
+
         tsmp2=System.currentTimeMillis();
         System.out.println("Took: "+((tsmp2-tsmp1)) +"ms");
 
@@ -101,7 +108,13 @@ public class Test {
                     latitudeStart= scanner.nextDouble();
                     System.out.println("Please insert the longitude of the start position");
                     longitudeStart= scanner.nextDouble();
-                    startNode=graph.findNearestNode(latitudeStart,longitudeStart);
+                    try{
+                        startNode=graph.findNearestNode(latitudeStart,longitudeStart);
+                    }catch (Exception e ){
+                        System.out.println("exception while finding nearest Node");
+                        return;
+                    }
+
                     System.out.println("The next node is: "+startNode);
                     break;
             }

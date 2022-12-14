@@ -1,7 +1,6 @@
 package de.unistuttgart;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.function.DoubleToIntFunction;
@@ -19,34 +18,34 @@ public class Graph {
 
 
 
-    public Graph(String pathname) {
+    public Graph(String pathname) throws IOException {
 
         /**
          * Create Scanner and read file with english notation (point instead of comma for float)
          */
 
-        Scanner scan;
+        BufferedReader bufferedReader;
         try {
-            scan = new Scanner(new File(pathname));
+            bufferedReader = new BufferedReader(new FileReader(pathname));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
 
-        scan.useLocale(Locale.ENGLISH);
+        //scan.useLocale(Locale.ENGLISH);
 
         /**
          * Reading the file line by line:
          * "readingline" represents the current line of the text file as string
          */
 
-        String readingLine = new String(scan.nextLine());
+        String readingLine = new String(bufferedReader.readLine());
 
         /**
          * The first lines of the text file, which don't contain the actual graph will be skipped
          */
 
         while (readingLine.contains("#") || readingLine.isEmpty()) {
-            readingLine = scan.nextLine();
+            readingLine = bufferedReader.readLine();
         }
 
         /**
@@ -56,12 +55,9 @@ public class Graph {
          */
 
         this.numberOfNodes = Integer.parseInt(readingLine);
-        readingLine = scan.nextLine();
+        readingLine = bufferedReader.readLine();
 
         this.numberOfEdges = Integer.parseInt(readingLine);
-
-        double twoPercentOfNodes = numberOfNodes * 0.2;
-        double twoPercentOfEdges = numberOfEdges * 0.2;
 
 
         this.nodeLong = new double[numberOfNodes];
@@ -75,15 +71,17 @@ public class Graph {
         int readId;
         double readLatitude;
         double readLongitude;
+        String nodeLine;
+        String[] nodeArray;
 
 
         for (int i = 0; i < numberOfNodes; i++) {
 
-            readId = scan.nextInt();
-            scan.nextLong();
-            readLatitude = scan.nextDouble();
-            readLongitude = scan.nextDouble();
-            scan.nextInt();
+            nodeLine = bufferedReader.readLine();
+            nodeArray = nodeLine.split(" ");
+            readId = Integer.parseInt(nodeArray[0]);
+            readLatitude = Double.parseDouble(nodeArray[2]);
+            readLongitude = Double.parseDouble(nodeArray[3]);
 
             nodeLat[readId] = readLatitude;
             nodeLong[readId] = readLongitude;
@@ -93,14 +91,16 @@ public class Graph {
         int readSrc;
         int readTrg;
         int readWeight;
+        String edgeLine;
+        String[] edgeArray;
 
         for (int j = 0; j < numberOfEdges; j++) {
 
-            readSrc = scan.nextInt();
-            readTrg = scan.nextInt();
-            readWeight = scan.nextInt();
-            scan.nextInt();
-            scan.nextInt();
+            edgeLine = bufferedReader.readLine();
+            edgeArray = edgeLine.split(" ");
+            readSrc = Integer.parseInt(edgeArray[0]);
+            readTrg = Integer.parseInt(edgeArray[1]);
+            readWeight = Integer.parseInt(edgeArray[2]);
 
             edge[0][j] = readSrc;
             edge[1][j] = readTrg;

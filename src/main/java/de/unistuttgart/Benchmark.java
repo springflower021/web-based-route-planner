@@ -2,6 +2,7 @@ package de.unistuttgart;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Benchmark {
@@ -18,7 +19,14 @@ public class Benchmark {
 		System.out.println("Reading graph file and creating graph data structure (" + graphPath + ")");
 		long graphReadStart = System.currentTimeMillis();
 		// TODO: read graph here
-		Graph graph = new Graph(graphPath);
+		Graph graph;
+		try{
+			graph = new Graph(graphPath);
+		}catch (IOException e){
+			e.printStackTrace();
+			return;
+		}
+
 		long graphReadEnd = System.currentTimeMillis();
 		System.out.println("\tgraph read took " + (graphReadEnd - graphReadStart) + "ms");
 
@@ -30,7 +38,13 @@ public class Benchmark {
 		long nodeFindStart = System.currentTimeMillis();
 		double[] coords = {0.0, 0.0};
 		// TODO: find closest node here and write coordinates into coords
-		int nodeID = graph.findNearestNode(lat,lon);
+		int nodeID;
+		try{
+			 nodeID= graph.findNearestNode(lat,lon);
+		}catch (Exception e ){
+			e.printStackTrace();
+			return;
+		}
 		coords[0]=graph.nodeLong[nodeID];
 		coords[1]=graph.nodeLat[nodeID];
 
