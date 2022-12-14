@@ -49,7 +49,7 @@ public class Benchmark {
 				// oneToOneSourceNodeId to oneToOneSourceNodeId as computed by
 				// the one-to-one Dijkstra
 				Dijkstra.DijkstraReturn dijkstraReturn = Dijkstra.dijkstraOneToOne(graph,oneToOneSourceNodeId,oneToOneSourceNodeId);
-				oneToOneDistance = dijkstraReturn.distance()[oneToOneSourceNodeId];
+				oneToOneDistance = dijkstraReturn.distance()[oneToOneTargetNodeId];
 
 				System.out.println(oneToOneDistance);
 			}
