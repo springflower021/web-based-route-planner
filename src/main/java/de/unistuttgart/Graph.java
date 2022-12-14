@@ -17,8 +17,6 @@ public class Graph {
     int numberOfNodes;
     Integer[] sortedLatitude;
 
-    double distanceStartFirstNode;
-    double distanceDestinationLastNode;
 
 
     public Graph(String pathname) {
@@ -153,7 +151,7 @@ public class Graph {
      * @return
      */
 
-    public int findNearestNode(double givenLatitude, double givenLongitude,boolean goal) {
+    public int findNearestNode(double givenLatitude, double givenLongitude) {
         int begin = 0;
         int end = numberOfNodes - 1;
         int nearestNodeLatitude = binarySearch(sortedLatitude,nodeLat, begin, end, givenLatitude);
@@ -178,11 +176,7 @@ public class Graph {
             distanceToMid++;
         }while(iterationsWithNoNewValue<10);
 
-        if(goal){
-            distanceStartFirstNode=distance(firstNode,givenLatitude,givenLongitude);
-        }else{
-            distanceDestinationLastNode=distance(firstNode,givenLatitude,givenLongitude);
-        }
+
         return firstNode;
     }
 

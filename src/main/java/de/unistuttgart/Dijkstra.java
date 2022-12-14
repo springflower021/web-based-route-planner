@@ -9,19 +9,9 @@ import java.util.function.IntToDoubleFunction;
 
 public class Dijkstra {
 
-    private record DijkstraReturn (int[] distance,int[] previous){}
-    public static int[] dijkstra(Graph graph, int startNode, int destinationNode) {
-        Timestamp tstamp1 = new Timestamp(System.currentTimeMillis());
-        DijkstraReturn d = dijkstraFunction(graph, startNode);
-        int[] shortestWay = createShortestWay(graph, destinationNode, d);
-        Timestamp tstamp2 = new Timestamp(System.currentTimeMillis());
-        System.out.println("\nAusführungszeit Dijkstra: "+ ((tstamp2.getTime()-tstamp1.getTime())/1000.0) + "s");
-        System.out.println(d.distance[destinationNode]);
-        return shortestWay;
-    }
+    public record DijkstraReturn (int[] distance,int[] previous){}
 
-
-    private static DijkstraReturn dijkstraFunction(Graph graph, int startNode) {
+    public static DijkstraReturn dijkstraOneToAll(Graph graph, int startNode) {
         DijkstraReturn dijkstraReturn = new DijkstraReturn(new int[graph.numberOfNodes],new int[graph.numberOfNodes]);
         int status = 0;
 
@@ -41,6 +31,33 @@ public class Dijkstra {
                 final int v = graph.edge[1][i];
                 final int distanceUV = graph.edge[2][i];
                     distanceUpdate(u, v, dijkstraReturn.distance, dijkstraReturn.previous, distanceUV,Q);
+            }
+        }
+        return dijkstraReturn;
+    }
+    public static DijkstraReturn dijkstraOneToOne(Graph graph, int startNode, int destinationNode) {
+        DijkstraReturn dijkstraReturn = new DijkstraReturn(new int[graph.numberOfNodes],new int[graph.numberOfNodes]);
+        int status = 0;
+
+        System.out.println("Ausführung Dijkstra:");
+
+        PriorityQueue<Integer> Q = new PriorityQueue<>(graph.numberOfNodes, (n1, n2) -> Integer.compare(dijkstraReturn.distance[n1],dijkstraReturn.distance[n2]));
+        initialize(graph, startNode, dijkstraReturn.distance, dijkstraReturn.previous, Q);
+
+        while (!Q.isEmpty()) {
+
+            int u = Q.poll();
+            if(Q.size()%100 == 0) {
+                status = 100 - (Q.size() * 100) / graph.numberOfNodes;
+                System.out.print("\r" + status + " %");
+            }
+            for (int i = graph.offset[u]; i < graph.offset[u + 1]; i++) {
+                final int v = graph.edge[1][i];
+                final int distanceUV = graph.edge[2][i];
+                distanceUpdate(u, v, dijkstraReturn.distance, dijkstraReturn.previous, distanceUV,Q);
+            }
+            if(u==destinationNode){
+                break;
             }
         }
         return dijkstraReturn;
