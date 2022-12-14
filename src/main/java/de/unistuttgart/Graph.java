@@ -26,7 +26,6 @@ public class Graph {
          */
 
         Scanner scan;
-        Timestamp tstamp1 = new Timestamp(System.currentTimeMillis());
         try {
             scan = new Scanner(new File(pathname));
         } catch (FileNotFoundException e) {
@@ -73,14 +72,17 @@ public class Graph {
 
 
         int nodesActuell = 0;
+        int readId;
+        double readLatitude;
+        double readLongitude;
 
 
         for (int i = 0; i < numberOfNodes; i++) {
 
-            int readId = scan.nextInt();
+            readId = scan.nextInt();
             scan.nextLong();
-            double readLatitude = scan.nextDouble();
-            double readLongitude = scan.nextDouble();
+            readLatitude = scan.nextDouble();
+            readLongitude = scan.nextDouble();
             scan.nextInt();
 
             nodeLat[readId] = readLatitude;
@@ -88,12 +90,15 @@ public class Graph {
 
         }
         int edgesActuell = 0;
+        int readSrc;
+        int readTrg;
+        int readWeight;
 
         for (int j = 0; j < numberOfEdges; j++) {
 
-            int readSrc = scan.nextInt();
-            int readTrg = scan.nextInt();
-            int readWeight = scan.nextInt();
+            readSrc = scan.nextInt();
+            readTrg = scan.nextInt();
+            readWeight = scan.nextInt();
             scan.nextInt();
             scan.nextInt();
 
