@@ -1,11 +1,10 @@
 package de.unistuttgart;
 
 
-import java.sql.Timestamp;
 import java.util.Arrays;
-import java.util.Comparator;
+
 import java.util.PriorityQueue;
-import java.util.function.IntToDoubleFunction;
+
 
 public class Dijkstra {
 
@@ -14,7 +13,6 @@ public class Dijkstra {
 
     public static DijkstraReturn dijkstraOneToAll(Graph graph, int startNode) {
         DijkstraReturn dijkstraReturn = new DijkstraReturn(new int[graph.numberOfNodes], new int[graph.numberOfNodes]);
-        int status = 0;
 
 
         PriorityQueue<Integer> Q = new PriorityQueue<>(graph.numberOfNodes, (n1, n2) -> Integer.compare(dijkstraReturn.distance[n1], dijkstraReturn.distance[n2]));
@@ -35,7 +33,7 @@ public class Dijkstra {
 
     public static DijkstraReturn dijkstraOneToOne(Graph graph, int startNode, int destinationNode) {
         DijkstraReturn dijkstraReturn = new DijkstraReturn(new int[graph.numberOfNodes], new int[graph.numberOfNodes]);
-        int status = 0;
+
 
         PriorityQueue<Integer> Q = new PriorityQueue<>(graph.numberOfNodes, (n1, n2) -> Integer.compare(dijkstraReturn.distance[n1], dijkstraReturn.distance[n2]));
         initialize(graph, startNode, dijkstraReturn.distance, dijkstraReturn.previous, Q);

@@ -1,7 +1,6 @@
 package de.unistuttgart;
 
-import java.io.*;
-import java.sql.Timestamp;
+
 import java.util.*;
 
 public class Test {
@@ -45,7 +44,7 @@ public class Test {
             choice = scanner.nextInt();
 
             switch (choice) {
-                case 1:
+                case 1 -> {
                     System.out.println("Please insert the latitude of the start position");
                     latitudeStart = scanner.nextDouble();
                     System.out.println("Please insert the longitude of the start position");
@@ -55,9 +54,8 @@ public class Test {
                     dijkstraReturn = Dijkstra.dijkstraOneToAll(graph, startNode);
                     tsmp2 = System.currentTimeMillis();
                     System.out.println("Took " + ((tsmp2 - tsmp1)) + "ms");
-
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     System.out.println("Please insert start node");
                     startNode = scanner.nextInt();
                     System.out.println("Please insert the destination node");
@@ -66,8 +64,8 @@ public class Test {
                     dijkstraReturn = Dijkstra.dijkstraOneToAll(graph, startNode);
                     tsmp2 = System.currentTimeMillis();
                     System.out.println("Took " + ((tsmp2 - tsmp1)) + "ms");
-                    break;
-                case 3:
+                }
+                case 3 -> {
                     System.out.println("Please insert the latitude of the start position");
                     latitudeStart = scanner.nextDouble();
                     System.out.println("Please insert the longitude of the start position");
@@ -87,8 +85,8 @@ public class Test {
                     }
                     System.out.print("\n");
                     System.out.println("Distance: " + dijkstraReturn.distance()[destinationNode]);
-                    break;
-                case 4:
+                }
+                case 4 -> {
                     System.out.println("Please insert start node");
                     startNode = scanner.nextInt();
                     System.out.println("Please insert the destination node");
@@ -102,8 +100,8 @@ public class Test {
                     }
                     System.out.print("\n");
                     System.out.println("Distance: " + dijkstraReturn.distance()[destinationNode]);
-                    break;
-                case 5:
+                }
+                case 5 -> {
                     System.out.println("Please insert the latitude of the start position");
                     latitudeStart = scanner.nextDouble();
                     System.out.println("Please insert the longitude of the start position");
@@ -114,45 +112,12 @@ public class Test {
                         System.out.println("exception while finding nearest Node");
                         return;
                     }
-
                     System.out.println("The next node is: " + startNode);
-                    break;
+                }
             }
 
         } while (choice != 0);
 
-
-        System.out.println("Please choose which Dijkstra should be performed");
-        System.out.println("'a' for one to all and 'o' for one to one ");
-        char dijkstraType = (char) scanner.nextByte();
-
-
-        //String pathname = "toy.fmi.txt";
-        //String pathname = "germany.fmi.txt";
-        //String pathname = "stgtregbz.fmi.txt";
-
-
-        /*System.out.println("Datei: " + pathname);
-        Graph graph = new Graph(pathname);
-        int[] way = Dijkstra.dijkstra(graph, graph.findNearestNode(48.783380,9.181280,true),graph.findNearestNode(48.774071,9.170642,false));
-        System.out.print("Weg: ");
-        for (int j : way) {
-            if (j != -1) {
-                System.out.print("->"+j);
-            }
-        }
-        System.out.print("\n");
-
-        public static int[] dijkstra(Graph graph, int startNode, int destinationNode) {
-            Timestamp tstamp1 = new Timestamp(System.currentTimeMillis());
-            Dijkstra.DijkstraReturn d = dijkstraFunction(graph, startNode);
-            int[] shortestWay = createShortestWay(graph, destinationNode, d);
-            Timestamp tstamp2 = new Timestamp(System.currentTimeMillis());
-            System.out.println("\nAusführungszeit Dijkstra: "+ ((tstamp2.getTime()-tstamp1.getTime())/1000.0) + "s");
-            System.out.println(d.distance[destinationNode]);
-            return shortestWay;
-        }
-        */
 
     }
 }
