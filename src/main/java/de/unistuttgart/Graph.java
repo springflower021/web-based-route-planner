@@ -2,6 +2,7 @@ package de.unistuttgart;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.function.DoubleToIntFunction;
 import java.util.function.IntToDoubleFunction;
@@ -9,11 +10,16 @@ import java.util.function.IntToDoubleFunction;
 public class Graph {
 
     int[][] edge;
-    double[][] node;
+    double[] nodeLat;
+    double[] nodeLong;
     int[] offset;
-
     int numberOfEdges;
     int numberOfNodes;
+    Integer[] sortedLatitude;
+
+    double distanceStartFirstNode;
+    double distanceDestinationLastNode;
+
 
     public Graph(String pathname) {
 
@@ -22,7 +28,7 @@ public class Graph {
          */
 
         Scanner scan;
-
+        Timestamp tstamp1 = new Timestamp(System.currentTimeMillis());
         try {
             scan = new Scanner(new File(pathname));
         } catch (FileNotFoundException e) {
@@ -57,17 +63,18 @@ public class Graph {
 
         this.numberOfEdges = Integer.parseInt(readingLine);
 
-        double twoPercentOfNodes = numberOfNodes*0.2;
-        double twoPercentOfEdges = numberOfEdges*0.2;
+        double twoPercentOfNodes = numberOfNodes * 0.2;
+        double twoPercentOfEdges = numberOfEdges * 0.2;
 
 
-        this.node = new double[2][numberOfNodes];
+        this.nodeLong = new double[numberOfNodes];
+        this.nodeLat = new double[numberOfNodes];
         this.edge = new int[3][numberOfEdges];
         this.offset = new int[numberOfNodes + 1];
 
         System.out.println("Nodes einlesen:");
 
-        int nodesActuell =0;
+        int nodesActuell = 0;
         System.out.print("0.0 %");
 
         for (int i = 0; i < numberOfNodes; i++) {
@@ -78,18 +85,18 @@ public class Graph {
             double readLongitude = scan.nextDouble();
             scan.nextInt();
 
-            node[0][readId] = readLatitude;
-            node[1][readId] = readLongitude;
+            nodeLat[readId] = readLatitude;
+            nodeLong[readId] = readLongitude;
 
-            if((i%100)==0){
-                nodesActuell = (i*100)/numberOfNodes;
-                System.out.print("\r"+nodesActuell+" %");
+            if ((i % 100) == 0) {
+                nodesActuell = (i * 100) / numberOfNodes;
+                System.out.print("\r" + nodesActuell + " %");
             }
         }
         System.out.println("\r100 % ");
         System.out.println("Edges einlesen:");
         System.out.print("0.0 %");
-        int edgesActuell =0;
+        int edgesActuell = 0;
 
         for (int j = 0; j < numberOfEdges; j++) {
 
@@ -103,16 +110,16 @@ public class Graph {
             edge[1][j] = readTrg;
             edge[2][j] = readWeight;
 
-            if((j%100)==0){
-                edgesActuell = (j*100)/numberOfEdges;
-                System.out.print("\r"+edgesActuell+" %");
+            if ((j % 100) == 0) {
+                edgesActuell = (j * 100) / numberOfEdges;
+                System.out.print("\r" + edgesActuell + " %");
             }
 
 
         }
         System.out.println("\r100 % ");
-        System.out.println("Offset berechnen:");
-        System.out.print("0.0 %");
+        Timestamp tstamp2 = new Timestamp(System.currentTimeMillis());
+        System.out.println("\nAusführungszeit " + pathname+ " eingelesen : "+ ((tstamp2.getTime()-tstamp1.getTime())/1000.0) + "s");
 
         int offsetAktuell = 0;
 
@@ -126,16 +133,96 @@ public class Graph {
                 offset[current + 1] = offset[current];
                 k--;
             }
-            if((k%100)==0){
-                offsetAktuell= (k*100)/numberOfEdges;
-                System.out.print("\r"+offsetAktuell+" %");
-            }
 
         }
-        System.out.println("\r100 % ");
 
+        sortedLatitude = new Integer[numberOfNodes];
+        for (int i=0; i<numberOfNodes; i++) {
+            sortedLatitude[i]= i;
         }
+        Comparator<Integer> latComp = (left,right)->Double.compare(nodeLat[left],nodeLat[right]);
+        Arrays.sort(sortedLatitude,latComp);
+
     }
+
+    /**
+     *
+     * @param givenLatitude
+     * @param givenLongitude
+     * @param goal Is one for finding start node and zero for finding destination node
+     * @return
+     */
+
+    public int findNearestNode(double givenLatitude, double givenLongitude,boolean goal) {
+        int begin = 0;
+        int end = numberOfNodes - 1;
+        int nearestNodeLatitude = binarySearch(sortedLatitude,nodeLat, begin, end, givenLatitude);
+        int distanceToMid = 1;
+        int firstNode = sortedLatitude[nearestNodeLatitude];
+        int secondNode = Integer.MAX_VALUE;
+        int thirdNode = Integer.MAX_VALUE;
+        int iterationsWithNoNewValue = 0;
+        do{
+            secondNode=sortedLatitude[nearestNodeLatitude+distanceToMid];
+            thirdNode=sortedLatitude[nearestNodeLatitude-distanceToMid];
+
+            if(distance(secondNode,givenLatitude,givenLongitude)< distance(firstNode,givenLatitude,givenLongitude)){
+                firstNode=secondNode;
+            }
+            else if (distance(thirdNode,givenLatitude,givenLongitude)< distance(firstNode,givenLatitude,givenLongitude)){
+                firstNode=thirdNode;
+            }
+            else{
+                iterationsWithNoNewValue ++;
+            }
+            distanceToMid++;
+        }while(iterationsWithNoNewValue<10);
+
+        if(goal){
+            distanceStartFirstNode=distance(firstNode,givenLatitude,givenLongitude);
+        }else{
+            distanceDestinationLastNode=distance(firstNode,givenLatitude,givenLongitude);
+        }
+        return firstNode;
+    }
+
+    private static int binarySearch(Integer[] sortedLatitude, double[] nodeLat,int fromIndex, int toIndex, double key) {
+        int nearestValue = -1;
+        int low = fromIndex;
+        int high = toIndex - 1;
+
+        while (low <= high) {
+            int mid = (low + high) >>> 1;
+            @SuppressWarnings("rawtypes")
+            Comparable midVal = (Comparable) nodeLat[sortedLatitude[mid]];
+            @SuppressWarnings("unchecked")
+            int cmp = midVal.compareTo(key);
+
+            if (cmp < 0)
+                low = mid + 1;
+            else if (cmp > 0)
+                high = mid - 1;
+            else
+                return mid; // key found
+
+            nearestValue = mid;
+        }
+        return nearestValue;  // key not found.
+    }
+    
+    private double distance(int nodeStart, int nodeDestination){
+        double x = nodeLong[nodeStart]-nodeLong[nodeDestination];
+        double y = nodeLat[nodeStart]-nodeLat[nodeDestination];
+        return Math.sqrt((y*y)+(x*x));
+    }
+    private double distance(int nodeDestination, double givenLat, double givenLong){
+        double x = givenLong-nodeLong[nodeDestination];
+        double y = givenLat-nodeLat[nodeDestination];
+        return Math.sqrt((y*y)+(x*x));
+    }
+
+
+}
 
 
 

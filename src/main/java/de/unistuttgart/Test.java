@@ -15,13 +15,15 @@ public class Test {
 
         System.out.println("Datei: " + pathname);
         Graph graph = new Graph(pathname);
-        int[] way = Dijkstra.dijkstra(graph, 1,2);
+        int[] way = Dijkstra.dijkstra(graph, graph.findNearestNode(48.783380,9.181280,true),graph.findNearestNode(48.774071,9.170642,false));
         System.out.print("Weg: ");
         for (int j : way) {
             if (j != -1) {
                 System.out.print("->"+j);
             }
         }
+        System.out.print("\n");
+
 
     }
 }

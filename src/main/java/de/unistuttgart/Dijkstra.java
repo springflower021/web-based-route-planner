@@ -8,24 +8,27 @@ import java.util.PriorityQueue;
 import java.util.function.IntToDoubleFunction;
 
 public class Dijkstra {
+
+    private record DijkstraReturn (int[] distance,int[] previous){}
     public static int[] dijkstra(Graph graph, int startNode, int destinationNode) {
         Timestamp tstamp1 = new Timestamp(System.currentTimeMillis());
-        int[] shortestWay = createShortestWay(graph, destinationNode, dijkstraFunction(graph, startNode));
+        DijkstraReturn d = dijkstraFunction(graph, startNode);
+        int[] shortestWay = createShortestWay(graph, destinationNode, d);
         Timestamp tstamp2 = new Timestamp(System.currentTimeMillis());
-        System.out.println("\nAusführungszeit Dijkstra: "+ (tstamp2.getTime()-tstamp1.getTime()) + " ms");
+        System.out.println("\nAusführungszeit Dijkstra: "+ ((tstamp2.getTime()-tstamp1.getTime())/1000.0) + "s");
+        System.out.println(d.distance[destinationNode]);
         return shortestWay;
     }
 
 
-    private static int[] dijkstraFunction(Graph graph, int startNode) {
-        int[] distance = new int[graph.numberOfNodes];
-        int[] previous = new int[graph.numberOfNodes];
+    private static DijkstraReturn dijkstraFunction(Graph graph, int startNode) {
+        DijkstraReturn dijkstraReturn = new DijkstraReturn(new int[graph.numberOfNodes],new int[graph.numberOfNodes]);
         int status = 0;
 
         System.out.println("Ausführung Dijkstra:");
 
-        PriorityQueue<Integer> Q = new PriorityQueue<>(graph.numberOfNodes, (n1, n2) -> Integer.compare(distance[n1], distance[n2]));
-        initialize(graph, startNode, distance, previous, Q);
+        PriorityQueue<Integer> Q = new PriorityQueue<>(graph.numberOfNodes, (n1, n2) -> Integer.compare(dijkstraReturn.distance[n1],dijkstraReturn.distance[n2]));
+        initialize(graph, startNode, dijkstraReturn.distance, dijkstraReturn.previous, Q);
 
         while (!Q.isEmpty()) {
 
@@ -37,12 +40,10 @@ public class Dijkstra {
             for (int i = graph.offset[u]; i < graph.offset[u + 1]; i++) {
                 final int v = graph.edge[1][i];
                 final int distanceUV = graph.edge[2][i];
-                if (Q.contains(v)) {
-                    distanceUpdate(u, v, distance, previous, distanceUV, Q);
-                }
+                    distanceUpdate(u, v, dijkstraReturn.distance, dijkstraReturn.previous, distanceUV,Q);
             }
         }
-        return previous;
+        return dijkstraReturn;
     }
 
     private static void initialize(Graph graph, int startNode, int[] distance, int[] previous, PriorityQueue<Integer> Q) {
@@ -53,12 +54,11 @@ public class Dijkstra {
                 distance[i] = Integer.MAX_VALUE;
             }
             previous[i] = -1;
-            Q.add(i);
         }
-
+        Q.add(startNode);
     }
 
-    private static void distanceUpdate(int u, int v, int[] distance, int[] previous, int distanceUV, PriorityQueue<Integer> Q) {
+    private static void distanceUpdate(int u, int v, int[] distance, int[] previous, int distanceUV,PriorityQueue<Integer> Q) {
         if ((distance[u] + distanceUV) < distance[v]) {
             distance[v] = distance[u] + distanceUV;
             Q.remove(v);
@@ -68,14 +68,14 @@ public class Dijkstra {
 
     }
 
-    private static int[] createShortestWay(Graph graph, int destinationNode, int[] previous) {
+    private static int[] createShortestWay(Graph graph, int destinationNode, DijkstraReturn dijkstraReturn) {
         int[] route = new int[graph.numberOfNodes];
         Arrays.fill(route, -1);
         route[graph.numberOfNodes - 1] = destinationNode;
         int u = destinationNode;
         int i = 2;
-        while (previous[u] != -1) {
-            u = previous[u];
+        while (dijkstraReturn.previous[u] != -1) {
+            u = dijkstraReturn.previous[u];
             route[graph.numberOfNodes - i] = u;
             i++;
         }
