@@ -20,20 +20,20 @@ public class Test {
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please insert the name of the graph file");
-        String pathname=scanner.nextLine();
-        tsmp1=System.currentTimeMillis();
+        String pathname = scanner.nextLine();
+        tsmp1 = System.currentTimeMillis();
         Graph graph;
-        try{
+        try {
             graph = new Graph(pathname);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return;
         }
 
-        tsmp2=System.currentTimeMillis();
-        System.out.println("Took: "+((tsmp2-tsmp1)) +"ms");
+        tsmp2 = System.currentTimeMillis();
+        System.out.println("Took: " + ((tsmp2 - tsmp1)) + "ms");
 
-        do{
+        do {
             System.out.println("///TEST MODULE///");
             System.out.println("0: Exit");
             System.out.println("1: Perform Dijkstra OneToAll: Position to Position");
@@ -42,97 +42,89 @@ public class Test {
             System.out.println("4: Perform Dijkstra OneToOne: Node to Node");
             System.out.println("5: FindNextNode");
 
-            choice=scanner.nextInt();
+            choice = scanner.nextInt();
 
-            switch (choice){
+            switch (choice) {
                 case 1:
                     System.out.println("Please insert the latitude of the start position");
-                    latitudeStart= scanner.nextDouble();
+                    latitudeStart = scanner.nextDouble();
                     System.out.println("Please insert the longitude of the start position");
-                    longitudeStart= scanner.nextDouble();
-                    startNode=graph.findNearestNode(latitudeStart,longitudeStart);
+                    longitudeStart = scanner.nextDouble();
+                    startNode = graph.findNearestNode(latitudeStart, longitudeStart);
                     tsmp1 = System.currentTimeMillis();
                     dijkstraReturn = Dijkstra.dijkstraOneToAll(graph, startNode);
                     tsmp2 = System.currentTimeMillis();
-                    System.out.println("Took "+ ((tsmp2-tsmp1)) +"ms");
+                    System.out.println("Took " + ((tsmp2 - tsmp1)) + "ms");
 
                     break;
                 case 2:
                     System.out.println("Please insert start node");
-                    startNode= scanner.nextInt();
+                    startNode = scanner.nextInt();
                     System.out.println("Please insert the destination node");
-                    destinationNode=scanner.nextInt();
+                    destinationNode = scanner.nextInt();
                     tsmp1 = System.currentTimeMillis();
                     dijkstraReturn = Dijkstra.dijkstraOneToAll(graph, startNode);
                     tsmp2 = System.currentTimeMillis();
-                    System.out.println("Took "+ ((tsmp2-tsmp1)) +"ms");
+                    System.out.println("Took " + ((tsmp2 - tsmp1)) + "ms");
                     break;
                 case 3:
                     System.out.println("Please insert the latitude of the start position");
-                    latitudeStart= scanner.nextDouble();
+                    latitudeStart = scanner.nextDouble();
                     System.out.println("Please insert the longitude of the start position");
-                    longitudeStart= scanner.nextDouble();
+                    longitudeStart = scanner.nextDouble();
                     System.out.println("Please insert the latitude of the destination position");
-                    latitudeDestination=scanner.nextDouble();
+                    latitudeDestination = scanner.nextDouble();
                     System.out.println("Please insert the longitude of the destination position");
-                    longitudeDestination=scanner.nextDouble();
-                    startNode=graph.findNearestNode(latitudeStart,longitudeStart);
-                    destinationNode=graph.findNearestNode(latitudeDestination,latitudeStart);
-                    dijkstraReturn = Dijkstra.dijkstraOneToOne(graph,startNode,destinationNode);
+                    longitudeDestination = scanner.nextDouble();
+                    startNode = graph.findNearestNode(latitudeStart, longitudeStart);
+                    destinationNode = graph.findNearestNode(latitudeDestination, latitudeStart);
+                    dijkstraReturn = Dijkstra.dijkstraOneToOne(graph, startNode, destinationNode);
                     System.out.print("Weg: ");
-                    for (int j : Dijkstra.createShortestWay(graph,destinationNode,dijkstraReturn)) {
+                    for (int j : Dijkstra.createShortestWay(graph, destinationNode, dijkstraReturn)) {
                         if (j != -1) {
-                            System.out.print("->"+j);
+                            System.out.print("->" + j);
                         }
                     }
                     System.out.print("\n");
-                    System.out.println("Distance: "+dijkstraReturn.distance()[destinationNode]);
+                    System.out.println("Distance: " + dijkstraReturn.distance()[destinationNode]);
                     break;
                 case 4:
                     System.out.println("Please insert start node");
-                    startNode= scanner.nextInt();
+                    startNode = scanner.nextInt();
                     System.out.println("Please insert the destination node");
-                    destinationNode=scanner.nextInt();
-                    dijkstraReturn = Dijkstra.dijkstraOneToOne(graph,startNode,destinationNode);
+                    destinationNode = scanner.nextInt();
+                    dijkstraReturn = Dijkstra.dijkstraOneToOne(graph, startNode, destinationNode);
                     System.out.print("Weg: ");
-                    for (int j : Dijkstra.createShortestWay(graph,destinationNode,dijkstraReturn)) {
+                    for (int j : Dijkstra.createShortestWay(graph, destinationNode, dijkstraReturn)) {
                         if (j != -1) {
-                            System.out.print("->"+j);
+                            System.out.print("->" + j);
                         }
                     }
                     System.out.print("\n");
-                    System.out.println("Distance: "+dijkstraReturn.distance()[destinationNode]);
+                    System.out.println("Distance: " + dijkstraReturn.distance()[destinationNode]);
                     break;
                 case 5:
                     System.out.println("Please insert the latitude of the start position");
-                    latitudeStart= scanner.nextDouble();
+                    latitudeStart = scanner.nextDouble();
                     System.out.println("Please insert the longitude of the start position");
-                    longitudeStart= scanner.nextDouble();
-                    try{
-                        startNode=graph.findNearestNode(latitudeStart,longitudeStart);
-                    }catch (Exception e ){
+                    longitudeStart = scanner.nextDouble();
+                    try {
+                        startNode = graph.findNearestNode(latitudeStart, longitudeStart);
+                    } catch (Exception e) {
                         System.out.println("exception while finding nearest Node");
                         return;
                     }
 
-                    System.out.println("The next node is: "+startNode);
+                    System.out.println("The next node is: " + startNode);
                     break;
             }
 
-        }while(choice!=0);
-
-
-
-
-
+        } while (choice != 0);
 
 
         System.out.println("Please choose which Dijkstra should be performed");
         System.out.println("'a' for one to all and 'o' for one to one ");
         char dijkstraType = (char) scanner.nextByte();
-
-
-
 
 
         //String pathname = "toy.fmi.txt";
