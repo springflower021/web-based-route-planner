@@ -48,7 +48,7 @@ public class Benchmark {
 				// TODO set oneToOneDistance to the distance from
 				// oneToOneSourceNodeId to oneToOneSourceNodeId as computed by
 				// the one-to-one Dijkstra
-				Dijkstra.DijkstraReturn dijkstraReturn = Dijkstra.dijkstraOneToOne(graph,oneToOneSourceNodeId,oneToOneSourceNodeId);
+				Dijkstra.DijkstraReturn dijkstraReturn = Dijkstra.dijkstraOneToOne(graph,oneToOneSourceNodeId,oneToOneTargetNodeId);
 				oneToOneDistance = dijkstraReturn.distance()[oneToOneTargetNodeId];
 
 				System.out.println(oneToOneDistance);
