@@ -29,7 +29,6 @@ public class Test {
             e.printStackTrace();
             return;
         }
-        graph.printGraph(graph);
         tsmp2 = System.currentTimeMillis();
         System.out.println("Took: " + ((tsmp2 - tsmp1)) + "ms");
 
@@ -52,8 +51,6 @@ public class Test {
                     longitudeStart = scanner.nextDouble();
                     sourceNode = graph.findNearestNode(latitudeStart, longitudeStart);
                     System.out.println(sourceNode);
-            		coords[0] = sourceNode.getLati();
-            	    coords[1] = sourceNode.getLongi();
                     tsmp1 = System.currentTimeMillis();
                     oneToAllDijkstra = new Dijkstra(graph);
             		oneToAllDijkstra.executeOneToAll(sourceNode);
@@ -68,7 +65,7 @@ public class Test {
                     tsmp1 = System.currentTimeMillis();
                     oneToAllDijkstra = new Dijkstra(graph);
               		oneToAllDijkstra.executeOneToAll(sourceNode);
-              		oneToAllDijkstra.printPath(targetNode);
+              		//oneToAllDijkstra.printPath(targetNode);
                     tsmp2 = System.currentTimeMillis();
                     System.out.println("Took " + ((tsmp2 - tsmp1)) + "ms");
                 }
@@ -85,7 +82,7 @@ public class Test {
                     targetNode = graph.findNearestNode(latitudeDestination, longitudeDestination);
                     oneToOneDijkstra = new Dijkstra(graph);
                     oneToOneDijkstra.executeOneToOne(sourceNode, targetNode);
-                    oneToOneDijkstra.printPath(targetNode);                 
+                    //oneToOneDijkstra.printPath(targetNode);                 
                     System.out.print("\n");
                     System.out.println("Distance: " + oneToOneDijkstra.getminimalDistance(targetNode));
                 }
@@ -96,7 +93,7 @@ public class Test {
                     targetNode = graph.getNode(scanner.nextInt());
                     oneToOneDijkstra = new Dijkstra(graph);
                     oneToOneDijkstra.executeOneToOne(sourceNode, targetNode);
-                    oneToOneDijkstra.printPath(targetNode);    
+                    //oneToOneDijkstra.printPath(targetNode);    
                     System.out.print("\n");
                     System.out.println("Distance: " + oneToOneDijkstra.getminimalDistance(targetNode));
                 }

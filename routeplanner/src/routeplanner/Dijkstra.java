@@ -76,7 +76,7 @@ public class Dijkstra {
 
 	private List<Node> getNeighbors(Node node) {	
 		List<Node> neighbors = new ArrayList<Node>();
-		for (Edge edge : edges) {		
+		for (Edge edge : edges) {	
 			if (edge.getSource() == node.getId()
 					&& !isSettled(edge.getTarget())) {
 				for (Node n : nodes) {
@@ -156,3 +156,5 @@ public class Dijkstra {
         }
 	}
 }
+
+
