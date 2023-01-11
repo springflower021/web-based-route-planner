@@ -192,5 +192,27 @@ public class Graph {
         return Math.sqrt((y * y) + (x * x));
     }
 
+    
+	public Set<Integer> adjacentNodes(int node) {
+		Set<Integer> adjacentNodes = new HashSet<>();
+		for (int i = offset[node]; i < offset[node + 1]; i++) {
+        	int n = edge[1][i];
+        	adjacentNodes.add(n);
+		}
+		return adjacentNodes;
+	}
+
+
+	public int edgeValue(int node, int neighbor) {
+		int start = offset[node];
+		int end = offset[node + 1];
+		for (int current = start; current < end; current++) {
+			if(edge[1][current] == neighbor) {
+				return edge[2][current];
+			}
+		}
+		return -1;
+	}
+    
 
 }

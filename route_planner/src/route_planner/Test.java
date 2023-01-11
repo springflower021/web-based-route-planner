@@ -13,6 +13,7 @@ public class Test {
         int startNode;
         int destinationNode;
         Dijkstra.DijkstraReturn dijkstraReturn;
+        DijkstraWithTreeSet.NodeWrapper nodeWrapper;
         long tsmp1;
         long tsmp2;
         long tsmp3;
@@ -51,26 +52,24 @@ public class Test {
                     System.out.println("Please insert the longitude of the start position");
                     longitudeStart = scanner.nextDouble();
                     startNode = graph.findNearestNode(latitudeStart, longitudeStart);
-                    tsmp1 = System.currentTimeMillis();
-                    dijkstraReturn = Dijkstra.dijkstraOneToAll(graph, startNode);
-                    tsmp2 = System.currentTimeMillis();
-                    System.out.println("Took " + ((tsmp2 - tsmp1)) + "ms" + "Node" + startNode);
+                    //tsmp1 = System.currentTimeMillis();
+                    //dijkstraReturn = Dijkstra.optimizedDijkstraOneToAll(graph, startNode);
+                    //tsmp2 = System.currentTimeMillis();
+                    //System.out.println("Took " + ((tsmp2 - tsmp1)) + "ms" + "Node" + startNode);
                     tsmp3 = System.currentTimeMillis();
-                    dijkstraReturn = Dijkstra.optimizedDijkstraOneToAll(graph, startNode);
+                    DijkstraWithTreeSet.findShortestPathOneToAll(graph, startNode);
                     tsmp4 = System.currentTimeMillis();
                     System.out.println("Took " + ((tsmp4 - tsmp3)) + "ms");
                 }
                 case 2 -> {
                     System.out.println("Please insert start node");
                     startNode = scanner.nextInt();
-                    /*
-                    tsmp1 = System.currentTimeMillis();
-                    dijkstraReturn = Dijkstra.dijkstraOneToAll(graph, startNode);
-                    tsmp2 = System.currentTimeMillis();
-                    System.out.println("Took " + ((tsmp2 - tsmp1)) + "ms");
-                    */
+                    //tsmp1 = System.currentTimeMillis();
+                    //dijkstraReturn = Dijkstra.optimizedDijkstraOneToAll(graph, startNode);
+                    //tsmp2 = System.currentTimeMillis();
+                    //System.out.println("Took " + ((tsmp2 - tsmp1)) + "ms");
                     tsmp3 = System.currentTimeMillis();
-                    dijkstraReturn = Dijkstra.optimizedDijkstraOneToAll(graph, startNode);
+                    DijkstraWithTreeSet.findShortestPathOneToAll(graph, startNode);
                     tsmp4 = System.currentTimeMillis();
                     System.out.println("Took " + ((tsmp4 - tsmp3)) + "ms");
                 }
@@ -85,30 +84,52 @@ public class Test {
                     longitudeDestination = scanner.nextDouble();
                     startNode = graph.findNearestNode(latitudeStart, longitudeStart);
                     destinationNode = graph.findNearestNode(latitudeDestination, longitudeDestination);
-                    dijkstraReturn = Dijkstra.dijkstraOneToOne(graph, startNode, destinationNode);
+                    nodeWrapper = DijkstraWithTreeSet.findShortestPathOneToOne(graph, startNode, destinationNode);
                     System.out.print("Weg: ");
-                    for (int j : Dijkstra.createShortestWay(graph, destinationNode, dijkstraReturn)) {
-                        if (j != -1) {
-                            System.out.print("->" + j);
-                        }
-                    }
+                    List<Integer> path = DijkstraWithTreeSet.createShortestPath(destinationNode, nodeWrapper);
+                    if (path != null) {
+                    	for (int j : DijkstraWithTreeSet.createShortestPath(destinationNode, nodeWrapper)) {                      
+                    		if (j != startNode) {                            
+                    			System.out.print("->" + j);                      
+                    		} else {                      	
+                    			System.out.print(j);                    
+                    		}                      
+                    	}
                     System.out.print("\n");
-                    System.out.println("Distance: " + dijkstraReturn.distance()[destinationNode]);
+                    System.out.println("Distance: " + nodeWrapper.distance()[destinationNode]);
+                    } else {
+                    	System.out.println("No Path found");
+                    }
                 }
                 case 4 -> {
                     System.out.println("Please insert start node");
                     startNode = scanner.nextInt();
                     System.out.println("Please insert the destination node");
                     destinationNode = scanner.nextInt();
-                    dijkstraReturn = Dijkstra.dijkstraOneToOne(graph, startNode, destinationNode);
+                    //tsmp1 = System.currentTimeMillis();
+                    //dijkstraReturn = Dijkstra.optimizedDijkstraOneToOne(graph, startNode, destinationNode);
+                    //tsmp2 = System.currentTimeMillis();
+                    //System.out.println("Took " + ((tsmp2 - tsmp1)) + "ms");
+                    tsmp3 = System.currentTimeMillis();
+                    nodeWrapper = DijkstraWithTreeSet.findShortestPathOneToOne(graph, startNode, destinationNode);
+                    tsmp4 = System.currentTimeMillis();
+                    System.out.println("Took " + ((tsmp4 - tsmp3)) + "ms");
                     System.out.print("Weg: ");
-                    for (int j : Dijkstra.createShortestWay(graph, destinationNode, dijkstraReturn)) {
-                        if (j != -1) {
-                            System.out.print("->" + j);
-                        }
-                    }
+                    List<Integer> path = DijkstraWithTreeSet.createShortestPath(destinationNode, nodeWrapper);
+                    if (path != null) {
+                    	for (int j : DijkstraWithTreeSet.createShortestPath(destinationNode, nodeWrapper)) {                      
+                    		if (j != startNode) {                            
+                    			System.out.print("->" + j);                      
+                    		} else {                      	
+                    			System.out.print(j);                    
+                    		}                      
+                    	}
                     System.out.print("\n");
-                    System.out.println("Distance: " + dijkstraReturn.distance()[destinationNode]);
+                    //System.out.println("Distance: " + dijkstraReturn.distance()[destinationNode]);    
+                    System.out.println("Distance: " + nodeWrapper.distance()[destinationNode]);
+                    } else {
+                    	System.out.println("No Path found");
+                    }
                 }
                 case 5 -> {
                     System.out.println("Please insert the latitude of the start position");
@@ -126,7 +147,8 @@ public class Test {
             }
 
         } while (choice != 0);
-
+        
+        
 
     }
 }
