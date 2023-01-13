@@ -103,7 +103,6 @@ public class Graph {
 
         }
 
-
         offset[0] = 0;
         int current = 0;
         for (int k = 0; k < this.numberOfEdges; k++) {
@@ -116,7 +115,6 @@ public class Graph {
             }
         }
         
-
         sortedLatitude = new Integer[numberOfNodes];
         for (int i = 0; i < numberOfNodes; i++) {
             sortedLatitude[i] = i;
@@ -124,49 +122,63 @@ public class Graph {
         Comparator<Integer> latComp = (left, right) -> Double.compare(nodeLat[left], nodeLat[right]);
         Arrays.sort(sortedLatitude, latComp);
 
+        bufferedReader.close();
     }
+    
 
-
+    //may have to change it later because there could be two nodes of the same distance!
     public int findNearestNode(double givenLatitude, double givenLongitude) {
         int begin = 0;
         int end = numberOfNodes - 1;
         int nearestNodeLatitude = binarySearch(sortedLatitude, nodeLat, begin, end, givenLatitude);
-        int distanceToMid = 1;
-        int firstNode = sortedLatitude[nearestNodeLatitude];
-        int secondNode;
-        int thirdNode;
-        int iterationsWithNoNewValue = 0;
-        do {
-            int index1 = nearestNodeLatitude + distanceToMid;
-            int index2 = nearestNodeLatitude - distanceToMid;
-            if (index1 >= numberOfNodes) {
-                index1 = numberOfNodes - 1;
-            } else if (index2 < 0) {
-                index2 = 0;
-            }
-            secondNode = sortedLatitude[index1];
-            thirdNode = sortedLatitude[index2];
-
-            if (distance(secondNode, givenLatitude, givenLongitude) < distance(firstNode, givenLatitude, givenLongitude)) {
-                firstNode = secondNode;
-            } else if (distance(thirdNode, givenLatitude, givenLongitude) < distance(firstNode, givenLatitude, givenLongitude)) {
-                firstNode = thirdNode;
+        int nearestNode = sortedLatitude[nearestNodeLatitude];
+        int currentNode;
+        double minDistance = distance(nearestNode, givenLatitude, givenLongitude);
+        
+        /*
+         * try to find the nearest node from the index onwards 
+         */
+        int index = nearestNodeLatitude;
+        while (index < end) {
+        	index++;         
+            currentNode = sortedLatitude[index];            
+            if (minDistance < latDifference(currentNode,givenLatitude)) {
+            	break;
             } else {
-                iterationsWithNoNewValue++;
-            }
-            distanceToMid++;
-        } while (iterationsWithNoNewValue < 10);
-
-
-        return firstNode;
+            	double currentDistance = distance(currentNode, givenLatitude, givenLongitude); 
+            	if (currentDistance < minDistance) {
+            		minDistance = currentDistance;
+            		nearestNode = currentNode;
+            	}
+            }    
+        }
+        
+        /*
+         * try to find the nearest node from the index backwards
+         */
+        index = nearestNodeLatitude;     
+        while (index > begin) {
+        	index--;            
+            currentNode = sortedLatitude[index];           
+            if (minDistance < latDifference(currentNode,givenLatitude)) {
+            	break;
+            } else {
+            	double currentDistance = distance(currentNode, givenLatitude, givenLongitude); 
+            	if (currentDistance < minDistance) {
+            		minDistance = currentDistance;
+            		nearestNode = currentNode;
+            	}
+            }    
+        }      
+        return nearestNode;
     }
-
+    
     private static int binarySearch(Integer[] sortedLatitude, double[] nodeLat, int fromIndex, int toIndex, double key) {
         int nearestValue = -1;
         int low = fromIndex;
-        int high = toIndex - 1;
+        int high = toIndex;
 
-        while (low <= high) {
+        while (low <= high) {        	
             int mid = (low + high) >>> 1;
             @SuppressWarnings("rawtypes")
             Comparable midVal = nodeLat[sortedLatitude[mid]];
@@ -177,11 +189,13 @@ public class Graph {
                 low = mid + 1;
             else if (cmp > 0)
                 high = mid - 1;
-            else
+            else {
+            	System.out.print(mid);
                 return mid; // key found
-
+            }
             nearestValue = mid;
         }
+        System.out.print(nearestValue);
         return nearestValue;  // key not found.
     }
 
@@ -192,5 +206,9 @@ public class Graph {
         return Math.sqrt((y * y) + (x * x));
     }
 
-
+    private double latDifference(int node, double givenLat) {
+        double delta = Math.abs(givenLat - nodeLat[node]);
+        return delta;
+    }
+    
 }

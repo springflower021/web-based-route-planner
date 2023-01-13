@@ -136,12 +136,16 @@ public class Test {
                     latitudeStart = scanner.nextDouble();
                     System.out.println("Please insert the longitude of the start position");
                     longitudeStart = scanner.nextDouble();
+                    tsmp1 = System.currentTimeMillis();
                     try {
                         startNode = graph.findNearestNode(latitudeStart, longitudeStart);
                     } catch (Exception e) {
                         System.out.println("exception while finding nearest Node");
                         return;
                     }
+                    tsmp2 = System.currentTimeMillis();
+                    System.out.println("Took " + ((tsmp2 - tsmp1)) + "ms");
+                    //System.out.println("Took " + ((tsmp2 - tsmp1)) + "ms");
                     System.out.println("The next node is: " + startNode);
                 }
             }
