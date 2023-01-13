@@ -79,7 +79,7 @@ public class DijkstraWithTreeSet {
 	  }
 	  
 	  public static NodeWrapper findShortestPathOneToAll(
-			  Graph graph, int source) {
+			  Graph graph, int source) {		  
 		  int node = source;
 		  NodeWrapper nodeWrapper = new NodeWrapper(new int[graph.numberOfNodes], new int[graph.numberOfNodes]);
 	      TreeSet<Integer> queue = new TreeSet<>((n1, n2) -> {

@@ -106,10 +106,10 @@ public class Test {
                     startNode = scanner.nextInt();
                     System.out.println("Please insert the destination node");
                     destinationNode = scanner.nextInt();
-                    //tsmp1 = System.currentTimeMillis();
-                    //dijkstraReturn = Dijkstra.optimizedDijkstraOneToOne(graph, startNode, destinationNode);
-                    //tsmp2 = System.currentTimeMillis();
-                    //System.out.println("Took " + ((tsmp2 - tsmp1)) + "ms");
+                    tsmp1 = System.currentTimeMillis();
+                    dijkstraReturn = Dijkstra.optimizedDijkstraOneToOne(graph, startNode, destinationNode);
+                    tsmp2 = System.currentTimeMillis();
+                    System.out.println("Took " + ((tsmp2 - tsmp1)) + "ms");
                     tsmp3 = System.currentTimeMillis();
                     nodeWrapper = DijkstraWithTreeSet.findShortestPathOneToOne(graph, startNode, destinationNode);
                     tsmp4 = System.currentTimeMillis();
@@ -125,7 +125,7 @@ public class Test {
                     		}                      
                     	}
                     System.out.print("\n");
-                    //System.out.println("Distance: " + dijkstraReturn.distance()[destinationNode]);    
+                    System.out.println("Distance: " + dijkstraReturn.distance()[destinationNode]);    
                     System.out.println("Distance: " + nodeWrapper.distance()[destinationNode]);
                     } else {
                     	System.out.println("No Path found");

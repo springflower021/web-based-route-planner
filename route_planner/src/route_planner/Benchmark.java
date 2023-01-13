@@ -62,7 +62,7 @@ public class Benchmark {
                 // TODO set oneToOneDistance to the distance from
                 // oneToOneSourceNodeId to oneToOneSourceNodeId as computed by
                 // the one-to-one Dijkstra
-                Dijkstra.DijkstraReturn dijkstraReturn = Dijkstra.dijkstraOneToOne(graph, oneToOneSourceNodeId, oneToOneTargetNodeId);
+                DijkstraWithTreeSet.NodeWrapper dijkstraReturn = DijkstraWithTreeSet.findShortestPathOneToOne(graph, oneToOneSourceNodeId, oneToOneTargetNodeId);
                 oneToOneDistance = dijkstraReturn.distance()[oneToOneTargetNodeId];
 
                 System.out.println(oneToOneDistance);
@@ -77,7 +77,7 @@ public class Benchmark {
         System.out.println("Computing one-to-all Dijkstra from node id " + sourceNodeId);
         long oneToAllStart = System.currentTimeMillis();
         // TODO: run one-to-all Dijkstra here
-        Dijkstra.DijkstraReturn dijkstraReturn = Dijkstra.dijkstraOneToAll(graph, sourceNodeId);
+        DijkstraWithTreeSet.NodeWrapper dijkstraReturn = DijkstraWithTreeSet.findShortestPathOneToAll(graph, sourceNodeId);
         long oneToAllEnd = System.currentTimeMillis();
         System.out.println("\tone-to-all Dijkstra took " + (oneToAllEnd - oneToAllStart) + "ms");
 

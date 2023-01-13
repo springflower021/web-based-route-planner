@@ -190,12 +190,10 @@ public class Graph {
             else if (cmp > 0)
                 high = mid - 1;
             else {
-            	System.out.print(mid);
                 return mid; // key found
             }
             nearestValue = mid;
         }
-        System.out.print(nearestValue);
         return nearestValue;  // key not found.
     }
 
