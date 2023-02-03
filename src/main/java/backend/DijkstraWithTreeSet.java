@@ -1,4 +1,4 @@
-package de.unistuttgart;
+package backend;
 
 //import com.google.common.graph.ValueGraph;
 import java.util.*;

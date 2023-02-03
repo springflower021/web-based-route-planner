@@ -1,4 +1,4 @@
-package de.unistuttgart;
+package backend;
 
 import java.util.*;
 
