@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Leaflet Test</title>
+    
+    <!-- leaflet css -->>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+        integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+        crossorigin=""/>     
+    
+    <style>        
+        #map {
+            width: 80%;
+            height: 400px;
+        }
+        
+    </style>  
+</head>
+<body>
+ <div id="map">  </div>
+ <div class="coordinate"></div>
+ <button type="button" id="button1" onclick=setSource()>Set</button>
+ <div class="source">
+ </div>
+ <button type="button" id="button2" onclick=setTarget()>Set</button>
+ <div class="target">
+ </div>
+ <button onClick=findPath()>Query</button><br>
+ <button onClick=reset()>Clear</button>
+</body>
+
+</html>
+<!-- leaflet js -->>
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+    integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+    crossorigin=""></script>
+
+<!-- jquery js -->>
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" 
+    integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" 
+    crossorigin="anonymous"></script>   
+
+<script>
+    // map class initialize
+    var map = L.map('map').setView([48.744945, 9.106736], 13);
+    
+    var sourceMarker;
+    var targetMarker;
+    var sourceId;
+    var targetId;
+    var myLayer = L.geoJSON();
+    myLayer.setStyle({ color: "blue" });
+    var lat;
+    var lng;
+    var jsonFeatures = [];
+
+    // adding osm tilelayer
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+    
+    // map coordinate display
+    map.on('click', function (e) {
+    $('.coordinate').html(`<small>Coordinates: ${e.latlng.lat}, ${e.latlng.lng}</small>`)
+    lat = e.latlng.lat;
+    lng = e.latlng.lng;
+    });
+    
+    // add marker	
+	function setSource() {
+    	
+		if (sourceMarker!=null) {
+    		map.removeLayer(sourceMarker);
+    	}
+		
+		var path = '/requestNearestNode/'; //relative path
+        var coord = lat + "/" + lng;
+        var query = path + coord;
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                //Process response
+                var data = JSON.parse(this.responseText);
+                point = {
+                        "id": data.id,
+                        "coordinates": data.coordinates
+                    }
+                sourceMarker = L.marker([point.coordinates[0], point.coordinates[1]])
+                                .addTo(map);
+                sourceId = data.id;
+        		$('.source').html(`<small>Source: ${point.coordinates[0]}, ${point.coordinates[1]} (${point.id})</small>`)
+        		
+            }
+        };
+        
+        if (query != null && query != "") {
+            //send request
+            xhttp.open("GET", query, true);
+            xhttp.send();
+        }
+	}
+	
+	function setTarget() {
+		if (targetMarker!=null) {
+	    	map.removeLayer(targetMarker);
+		}
+		
+		var path = '/requestNearestNode/'; //relative path
+        var coord = lat + "/" + lng;
+        var query = path + coord;
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                //Process response
+                var data = JSON.parse(this.responseText);
+                point = {
+                        "id": data.id,
+                        "coordinates": data.coordinates
+                    }
+                targetMarker = L.marker([point.coordinates[0], point.coordinates[1]])
+                                .addTo(map);
+                targetId = data.id;
+        		$('.target').html(`<small>Target: ${point.coordinates[0]}, ${point.coordinates[1]} (${point.id})</small>`)
+   		
+        	}
+            
+        };
+        
+        if (query != null && query != "") {
+            //send request
+            xhttp.open("GET", query, true);
+            xhttp.send();
+        }		
+	}
+	
+	function findPath() {
+		if (sourceMarker!=null && targetMarker!=null) {
+			var path = '/requestShortestPath/'; //relative path
+	        var ids = sourceId + "/" + targetId;
+	        var query = path + ids;
+			/*
+	        latlngs.push(sourceMarker.getLatLng());
+			latlngs.push(targetMarker.getLatLng());
+			polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+			map.fitBounds(polyline.getBounds());
+			*/
+
+	        var xhttp = new XMLHttpRequest();
+	        xhttp.onreadystatechange = function () {
+	            if (this.readyState == 4 && this.status == 200) {
+	                //Process response
+	                var data = JSON.parse(this.responseText);
+                    var coords = [];
+	                data.forEach(function(point){
+	                	var lat = point.latitude;
+	                    var lon = point.longitude;
+	                    var coordinate = [lon, lat];
+	                    coords.push(coordinate);
+	                   /*
+	                    var feature = {type: 'Feature',
+	                        properties: {},
+	                        geometry: {
+	                            type: 'Point',
+	                            coordinates: [lon,lat]
+	                        }
+	                    };
+	                    
+	                    jsonFeatures.push(feature);
+	                    */
+	                });
+	                var feature = {type: 'Feature',
+	                        geometry: {
+	                            type: 'LineString',
+	                            coordinates: coords
+	                        },
+	                        properties: {},
+	                    };
+	                jsonFeatures.push(feature);
+	                
+	                var geoJson = { type: 'FeatureCollection', features: jsonFeatures };
+	                //console.log(geoJson);
+	                L.geoJson(geoJson).addTo(map);
+	                //var polyline = L.polyline(geoJson, {color: 'red'}).addTo(map);
+	                //map.fitBounds(geoJson.getBounds());
+	        	}
+	            
+	        };
+	        
+	        if (query != null && query != "") {
+	            //send request
+	            xhttp.open("GET", query, true);
+	            xhttp.send();
+	        }		
+		}		
+	}
+	
+	function reset(){
+		/*
+		map.eachLayer((layer) => {
+			  layer.remove();
+			});
+		*/
+		map.removeLayer(sourceMarker);
+		map.removeLayer(targetMarker);
+		map.removeLayer(polyline);
+		sourceMarker = null;
+		targetMarker = null;
+		latlngs.length = 0;
+	}
+
+</script>
+        

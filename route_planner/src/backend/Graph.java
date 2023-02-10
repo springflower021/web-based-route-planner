@@ -1,4 +1,4 @@
-package route_planner;
+package backend;
 
 import java.io.*;
 import java.util.*;
@@ -6,8 +6,8 @@ import java.util.*;
 public class Graph {
 
     int[][] edge;
-    double[] nodeLat;
-    double[] nodeLong;
+    public double[] nodeLat;
+    public double[] nodeLong;
     int[] offset;
     int numberOfEdges;
     int numberOfNodes;
