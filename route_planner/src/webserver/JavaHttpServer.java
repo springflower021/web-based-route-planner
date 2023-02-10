@@ -90,7 +90,7 @@ public class JavaHttpServer {
 				    	JSONArrayCoord.add(1, nodeLong);
 				    	node.put("id", nearestNode);
 				    	node.put("coordinates", JSONArrayCoord);
-				    	System.out.print(node);
+				    	System.out.println(node + "\n");
 				    	
 				    	clientOutput.write(("HTTP/1.1 200 OK\r\n").getBytes());
 				    	clientOutput.write(("\r\n").getBytes());

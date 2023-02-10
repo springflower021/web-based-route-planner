@@ -50,7 +50,6 @@
     var sourceId;
     var targetId;
     var myLayer = L.geoJSON();
-    myLayer.setStyle({ color: "red" });
     var lat;
     var lng;
 
@@ -137,6 +136,9 @@
 	}
 	
 	function findPath() {
+		if (myLayer!=null) {
+	    	map.removeLayer(myLayer);
+		}
 		if (sourceMarker!=null && targetMarker!=null) {
 			var path = '/requestShortestPath/'; //relative path
 	        var ids = sourceId + "/" + targetId;
