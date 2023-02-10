@@ -50,10 +50,9 @@
     var sourceId;
     var targetId;
     var myLayer = L.geoJSON();
-    myLayer.setStyle({ color: "blue" });
+    myLayer.setStyle({ color: "red" });
     var lat;
     var lng;
-    var jsonFeatures = [];
 
     // adding osm tilelayer
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -142,12 +141,6 @@
 			var path = '/requestShortestPath/'; //relative path
 	        var ids = sourceId + "/" + targetId;
 	        var query = path + ids;
-			/*
-	        latlngs.push(sourceMarker.getLatLng());
-			latlngs.push(targetMarker.getLatLng());
-			polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
-			map.fitBounds(polyline.getBounds());
-			*/
 
 	        var xhttp = new XMLHttpRequest();
 	        xhttp.onreadystatechange = function () {
@@ -155,6 +148,7 @@
 	                //Process response
 	                var data = JSON.parse(this.responseText);
                     var coords = [];
+                    var jsonFeatures = [];
 	                data.forEach(function(point){
 	                	var lat = point.latitude;
 	                    var lon = point.longitude;
@@ -182,10 +176,8 @@
 	                jsonFeatures.push(feature);
 	                
 	                var geoJson = { type: 'FeatureCollection', features: jsonFeatures };
-	                //console.log(geoJson);
-	                L.geoJson(geoJson).addTo(map);
-	                //var polyline = L.polyline(geoJson, {color: 'red'}).addTo(map);
-	                //map.fitBounds(geoJson.getBounds());
+	                myLayer = L.geoJson(geoJson).addTo(map);               
+	                map.fitBounds(myLayer.getBounds());
 	        	}
 	            
 	        };
@@ -206,10 +198,11 @@
 		*/
 		map.removeLayer(sourceMarker);
 		map.removeLayer(targetMarker);
-		map.removeLayer(polyline);
+		map.removeLayer(myLayer);
 		sourceMarker = null;
 		targetMarker = null;
-		latlngs.length = 0;
+		sourceId = null;
+	    targetId = null;
 	}
 
 </script>
